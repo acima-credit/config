@@ -1,0 +1,358 @@
+---
+
+name: aperture 
+
+env:
+
+  default:
+    env_file:
+      - .env
+    container:
+      - name: default
+        port: 8080
+        health_check_delay: 60
+        linkerd: disabled
+        prometheus: true
+        prometheus_path: /private/metrics
+    auth0_vars:
+      - name: primary
+    auth0_server:
+      - name: primary
+        scopes:
+          - "read:locations:public"
+          - "read:merchants:public"
+          - "read:applications"
+          - "write:applications"
+          - "read:applications:partial"
+          - "write:applications:partial"
+          - "write:invoices"
+          - "read:invoices"
+          - "read:merchants"
+          - "search:applications"
+        token_lifetime: 604800
+    auth0_client:
+      - name: m2m
+        internal_client: true
+    auth0_client_grant:
+      - name: ecom-orc
+        auth0_client: ->ecom-orc/m2m
+        scopes:
+          - "read:applications"
+          - "write:applications"
+          - "search:applications"
+          - "read:invoices"
+          - "write:invoices"
+          - "read:merchants:public"
+          - "read:merchants"
+      - name: wayfair
+        auth0_client: ->wayfair/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications"]
+    kafka_client:
+      - name: primary
+    postgres:
+      - name: primary
+        separate_vars: true
+    redis:
+      - name: primary
+    service:
+      - name: global-customer
+        trailing_slash: false
+        varlinks:
+          - alias: GCRS_AUTH_TOKEN
+            target: SERVICE_API_AUTH_TOKEN
+      - name: contract-funding
+        trailing_slash: false
+      - name: ecom-auth
+        trailing_slash: false
+      - name: ecom
+        trailing_slash: false
+        varlinks:
+          - alias: ECOM_AUTH_TOKEN
+            target: ECOM_SERVICE_TOKEN
+      - name: ams
+        trailing_slash: false
+      - name: bank-account
+        trailing_slash: false
+      - name: lms
+        trailing_slash: false
+        varlinks:
+          - alias: LMS_AUTH_TOKEN
+            target: SERVICE_API_AUTH_TOKEN
+      - name: underwriting
+        trailing_slash: false
+        varlinks:
+          - alias: UW_AUTH_TOKEN
+            target: SERVICE_API_AUTH_TOKEN
+
+  learning:
+    env_file:
+      - .env
+      - .learning.env
+
+  sandbox:
+    container:
+      - name: default
+        port: 8080
+    env_file:
+      - .env
+      - .sandbox.env
+    auth0_client_grant:
+      - name: tire-agent
+        auth0_client: ->tire-agent/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: test-third-party-client
+        auth0_client: ->test-third-party-client/m2m
+        scopes:
+          - "read:locations:public"
+          - "read:merchants:public"
+          - "read:applications"
+          - "write:applications"
+          - "read:invoices"
+          - "write:invoices"
+          - "read:merchants"
+          - "read:applications:partial"
+          - "write:applications:partial"
+      - name: _360payments
+        auth0_client: ->_360payments/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices" ]
+      - name: ashley-dsg
+        auth0_client: ->ashley-dsg/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: ashley-furniture
+        auth0_client: ->ashley-furniture/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: bobs-discount-furniture
+        auth0_client: ->bobs-discount-furniture/m2m
+        scopes: [ "read:applications", "write:applications" ]
+      - name: buy-on-trust
+        auth0_client: ->buy-on-trust/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: chargeafter
+        auth0_client: ->chargeafter/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications" ]
+      - name: conns
+        auth0_client: ->conns/m2m
+        scopes: [ "read:applications:partial", "write:applications:partial", "read:applications", "write:applications", "read:invoices", "write:invoices" ]
+      - name: conns-ecom
+        auth0_client: ->conns-ecom/m2m
+        scopes: ["read:merchants", "read:applications:partial", "write:applications:partial", "read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: custom-sounds
+        auth0_client: ->custom-sounds/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: discount-wheel-warehouse
+        auth0_client: ->discount-wheel-warehouse/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices" ]
+      - name: drive-marketing
+        auth0_client: ->drive-marketing/m2m
+        scopes: ["read:locations:public", "read:merchants:public", "read:merchants"]
+      - name: electronic-express
+        auth0_client: ->electronic-express/m2m
+        scopes: [ "read:applications", "write:applications"]
+      - name: electrofinance
+        auth0_client: ->electrofinance/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices" ]
+      - name: fortiva
+        auth0_client: ->fortiva/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: icuracao
+        auth0_client: ->icuracao/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: lendpro
+        auth0_client: ->lendpro/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications"]
+      - name: mcd
+        auth0_client: ->mcd/m2m
+        scopes: [ ]
+      - name: mickey-shorr
+        auth0_client: ->mickey-shorr/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications"]
+      - name: pc-richards
+        auth0_client: ->pc-richards/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: rent-a-center
+        auth0_client: ->rent-a-center/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: rent-a-wheel
+        auth0_client: ->rent-a-wheel/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: ridestyler
+        auth0_client: ->ridestyler/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices" ]
+      - name: rooms-to-go
+        auth0_client: ->rooms-to-go/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices" ]
+      - name: shopify
+        auth0_client: ->shopify/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications" ]
+      - name: sonic-electronix
+        auth0_client: ->sonic-electronix/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: value-city
+        auth0_client: ->value-city/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices", "read:applications:partial", "write:applications:partial"]
+      - name: versatile
+        auth0_client: ->versatile/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications"]
+      - name: whirlpool
+        auth0_client: ->whirlpool/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+
+    route:
+      - name: public
+        domain: sandbox.acimacredit.com
+        subdomain: api
+        load_balancer: public
+        block_paths:
+          - /private
+        # deprecated
+      - name: legacy
+        subdomain: api-sandbox
+        domain: acimacredit.com
+        target: public-lb.sandbox.acimacredit.com
+        name_suffix: -legacy
+        block_paths:
+          - /private
+      - name: public-acima
+        domain: sandbox.acima.com
+        subdomain: api
+        target: public-lb.sandbox.acima.com
+        load_balancer: public-acima
+        block_paths:
+          - /private
+
+  preflight:
+    auth0_vars:
+      - name: primary
+    auth0_client_grant:
+      - name: test-third-party-client
+        auth0_client: ->test-third-party-client/m2m
+        scopes:
+          - "read:locations:public"
+          - "read:merchants:public"
+          - "read:applications"
+          - "write:applications"
+          - "read:invoices"
+          - "write:invoices"
+          - "read:merchants"
+      - name: ashley-furniture
+        auth0_client: ->ashley-furniture/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices" ]
+      - name: conns
+        auth0_client: ->conns/m2m
+        scopes: [ "read:merchants", "read:applications:partial", "write:applications:partial", "read:applications", "write:applications", "read:invoices", "write:invoices" ]
+      - name: conns-ecom
+        auth0_client: ->conns-ecom/m2m
+        scopes: [ "read:merchants", "read:applications:partial", "write:applications:partial", "read:applications", "write:applications", "read:invoices", "write:invoices" ]
+    env_file:
+      - .env
+      - .preflight.env
+
+    route:
+      - name: public-acima
+        domain: preflight.acima.com
+        subdomain: api
+        target: public-lb.preflight.acima.com
+        load_balancer: public-acima
+        block_paths:
+          - /private
+
+  production:
+    env_file:
+      - .env
+      - .production.env
+    auth0_client_grant:
+      - name: ashley-furniture
+        auth0_client: ->ashley-furniture/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: bobs-discount-furniture
+        auth0_client: ->bobs-discount-furniture/m2m
+        scopes: ["read:applications", "write:applications"]
+      - name: buy-on-trust
+        auth0_client: ->buy-on-trust/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: chargeafter
+        auth0_client: ->chargeafter/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications"]
+      - name: conns
+        auth0_client: ->conns/m2m
+        scopes: ["read:applications:partial", "write:applications:partial", "read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: conns-ecom
+        auth0_client: ->conns-ecom/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: custom-sounds
+        auth0_client: ->custom-sounds/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: drive-marketing
+        auth0_client: ->drive-marketing/m2m
+        scopes: ["read:locations:public", "read:merchants:public", "read:merchants"]
+      - name: electrofinance
+        auth0_client: ->electrofinance/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: fortiva
+        auth0_client: ->fortiva/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: icuracao
+        auth0_client: ->icuracao/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: lendpro
+        auth0_client: ->lendpro/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications"]
+      - name: mcd
+        auth0_client: ->mcd/m2m
+        scopes: []
+      - name: mickey-shorr
+        auth0_client: ->mickey-shorr/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications"]
+      - name: pc-richards
+        auth0_client: ->pc-richards/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: rent-a-wheel
+        auth0_client: ->rent-a-wheel/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: rooms-to-go
+        auth0_client: ->rooms-to-go/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: shopify
+        auth0_client: ->shopify/m2m
+        scopes: [ "read:applications", "write:applications", "read:invoices", "write:invoices", "search:applications" ]
+      - name: sonic-electronix
+        auth0_client: ->sonic-electronix/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: test-third-party-client
+        auth0_client: ->test-third-party-client/m2m
+        scopes:
+          - "read:locations:public"
+          - "read:merchants:public"
+          - "read:applications"
+          - "write:applications"
+          - "read:invoices"
+          - "write:invoices"
+          - "read:merchants"
+          - "read:applications:partial"
+          - "write:applications:partial"
+      - name: tire-agent
+        auth0_client: ->tire-agent/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+      - name: whirlpool
+        auth0_client: ->whirlpool/m2m
+        scopes: ["read:applications", "write:applications", "read:invoices", "write:invoices"]
+    route:
+      - name: aperture-acima-io
+        domain: production.acima.io
+      - name: api-acimacredit-com
+        domain: acimacredit.com
+        load_balancer: public
+        subdomain: api
+        block_paths:
+          - /private
+      - name: public-acima
+        domain: acima.com
+        subdomain: api
+        target: public-lb.acima.com
+        load_balancer: public-acima
+        block_paths:
+          - /private
+    access:
+      - name: zach.pearce
+      - name: oz.lopez
+      - name: daniel.mower

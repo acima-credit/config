@@ -1,0 +1,27 @@
+spring:
+  reactor:
+    debug-agent:
+      enabled: false
+
+environment:
+  services:
+    oauth2:
+      uri: ${OAUTH2_JWT_URL:https://acimacredit-dev.auth0.com}
+    bazaar:
+      uri: ${MERCHANT_PORTAL_URL:http://merchant-portal:3000}
+    merchant-portal:
+      uri: ${MERCHANT_PORTAL_URL:http://merchant-portal:3000}
+    rr-auth:
+      uri: ${RR_AUTH_URL:http://rr-auth:8080}
+    rr-lease-api:
+      uri: ${RR_LEASE_API_URL:http://rr-lease-api:8080}
+    rr-storis:
+      uri: ${RR_STORIS_URL:http://rr-storis:8101}
+    ams:
+      uri: ${AMS_URL:http://ams:3000}
+    lms:
+      uri: ${LMS_URL:http://lms:3005}
+    gcrs:
+      uri: ${GCRS_URL:http://global-customer:3008}
+    ecom_auth:
+      uri: ${ECOM_AUTH_URL:http://ecom-auth:8080}

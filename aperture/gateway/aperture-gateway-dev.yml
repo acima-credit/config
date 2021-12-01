@@ -1,0 +1,8 @@
+aperture:
+  # This instead of spring security config because we can't configure an opaque token and a jwt at the same time
+  # And we want to validate the audience claim, therefore have to build our own jwt validator
+  security:
+    trusted-jwt-issuers:
+      - "https://acimacredit-dev.auth0.com/"
+      - "https://auth-nonprod.acima.com/oauth2/default"
+      - "https://auth-preflight.acima.com/oauth2/default"

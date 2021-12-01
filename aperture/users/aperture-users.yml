@@ -1,0 +1,6 @@
+aperture:
+  users:
+    okta:
+      groups:
+        - name: AcimaUsersForSMSLogin
+          id: 00gk4zdfoQugMSOkA1d6

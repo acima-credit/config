@@ -1,0 +1,107 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          ams:
+            authorization-grant-type: client_credentials
+            client-id: ${OAUTH2_M2M_CLIENT_ID:foo}
+            client-secret: ${OAUTH2_M2M_CLIENT_SECRET:bar}
+            provider: auth0
+          gcrs:
+            authorization-grant-type: client_credentials
+            client-id: ${OAUTH2_M2M_CLIENT_ID:foo}
+            client-secret: ${OAUTH2_M2M_CLIENT_SECRET:bar}
+            provider: auth0
+          merchant-portal:
+            authorization-grant-type: client_credentials
+            client-id: ${OAUTH2_M2M_CLIENT_ID:foo}
+            client-secret: ${OAUTH2_M2M_CLIENT_SECRET:bar}
+            provider: auth0
+          bank-account:
+            authorization-grant-type: client_credentials
+            client-id: ${OAUTH2_M2M_CLIENT_ID:foo}
+            client-secret: ${OAUTH2_M2M_CLIENT_SECRET:bar}
+            provider: auth0
+          lms:
+            authorization-grant-type: client_credentials
+            client-id: ${RR_AUTH_CLIENT_ID:foo}
+            client-secret: ${RR_AUTH_CLIENT_SECRET:bar}
+            provider: rrAuth
+          uw:
+            authorization-grant-type: client_credentials
+            client-id: ${OAUTH2_M2M_CLIENT_ID:foo}
+            client-secret: ${OAUTH2_M2M_CLIENT_SECRET:bar}
+            provider: auth0
+          looking-glass:
+            authorization-grant-type: client_credentials
+            client-id: ${OAUTH2_M2M_CLIENT_ID:foo}
+            client-secret: ${OAUTH2_M2M_CLIENT_SECRET:bar}
+            provider: auth0
+
+        provider:
+          auth0:
+            token-uri: ${OAUTH2_TOKEN_URL:https://acimacredit-dev.auth0.com/oauth/token}
+          rrAuth:
+            token-uri: ${RRAUTH_OAUTH2_TOKEN_URL:http://localhost:8081/oauth/token}
+
+aperture:
+  environment:
+    services:
+      ams:
+        audience: ${OAUTH2_AMS_AUDIENCE:https://ams.acimacredit.com}
+        uri: ${AMS_URL:http://ams}
+      aperture-local:
+        uri: apiForward:/
+      bank-account:
+        uri: ${BANK_ACCOUNT_URL:http://bank-account}
+        audience: ${OAUTH2_BANK_ACCOUNT_AUDIENCE:https://bank-account.acimacredit.com}
+      bazaar:
+        uri: ${MERCHANT_PORTAL_URL:http://merchant-portal}
+      contract-funding:
+        uri: ${CONTRACT_FUNDING_URL:http://contract-funding}
+      ecom:
+        uri: ${ECOM_URL:http://ecom}
+        auth-token: ${ECOM_AUTH_TOKEN:change-me}
+        auth-token-header: Service-Token
+      ecom-auth:
+        uri: ${ECOM_AUTH_URL:http://ecom}
+        auth-token: ${ECOM_AUTH_TOKEN:change-me}
+        auth-token-header: Service-Token
+      gcrs:
+        uri: ${GLOBAL_CUSTOMER_URL:http://global-customer}
+        audience: ${OAUTH2_GLOBAL_CUSTOMER_AUDIENCE:https://global-customer.acimacredit.com}
+      lms:
+        auth-token: ${LMS_AUTH_TOKEN:change_me}
+        uri: ${LMS_URL:http://lms}
+        auth-token-header: Auth-Token
+      merchant-portal:
+        audience: ${OAUTH2_MERCHANT_PORTAL_AUDIENCE:https://merchant-portal.acimacredit.com}
+        uri: ${MERCHANT_PORTAL_URL:http://merchant-portal}
+      oauth2:
+        uri: ${OAUTH2_JWT_ISSUER:https://acimacredit-dev.auth0.com}
+      rr-auth:
+        uri: ${RR_AUTH_URL:http://rr-auth}
+      rr-lease-api:
+        uri: ${RR_LEASE_URL:http://rr-lease}
+      rr-storis:
+        uri: ${STORIS_URL:http://rr-storis}
+      uw:
+        audience: ${OAUTH2_UNDERWRITING_AUDIENCE:https://underwriting.acimacredit.com}
+        uri: ${UW_URL:http://underwriting}
+      looking-glass:
+        audience: ${OAUTH2_LOOKING_GLASS_AUDIENCE:https://looking-glass.acimacredit.com}
+        uri: ${LOOKING_GLASS_URL:http://looking-glass}
+  hack:
+    internalClientIds:
+      # browser plugin
+      - 0oanqfx414uksG3TW1d6
+      # mobile app
+      - 0oajy9i83HH7Xy7QB1d6
+      # mobile app service layer
+      - 0oa117xyiy4OWlqEs1d7
+
+
+mailgun:
+  apiKey: foo
+  domain: mail.acimacredit.com

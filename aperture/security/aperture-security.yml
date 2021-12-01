@@ -1,0 +1,28 @@
+aperture:
+  # This instead of spring security config because we can't configure an opaque token and a jwt at the same time
+  # And we want to validate the audience claim, therefore have to build our own jwt validator
+  security:
+    trusted-jwt-issuers:
+      okta: "https://auth.acima.com/oauth2/default"
+      auth0: "https://acimacredit.auth0.com/"
+    opaqueToken:
+      #TODO THESE NEED TO BE REMOVED FROM SOURCE CODE
+      clientId: ${RR_AUTH_CLIENT_ID:c4bbfacb79da}
+      clientSecret: ${RR_AUTH_CLIENT_SECRET:0f82089a-84f1-4626-9f29-75f03a3dabc3}
+      introspectionUri: ${RR_AUTH_CHECK_TOKEN_URL:http://rr-auth:80/oauth/check_token}
+    permittedPaths:
+      - "/oauth/token"
+      - "/oauth/check_token"
+      - "/api/oauth/token"
+      - "/status"
+      - "/private/**"
+      - "/storis/**"
+      - "/api/estimates"
+    jwt:
+      audiences:
+        - ${OAUTH2_APERTURE_AUDIENCE:https://aperture.acimacredit.com}
+        - ${OAUTH2_MERCHANT_PORTAL_AUDIENCE:https://merchant-portal.acimacredit.com}
+        - api://default
+    cors:
+      allowedOrigins:
+        - ${MERCHANT_PORTAL_URL:http://merchant-portal}

@@ -1,0 +1,60 @@
+context:
+  initializer:
+    classes: com.acimacredit.apply.BeansInitializer,
+             com.acimacredit.common.BeansInitializer,
+             com.acimacredit.common.clients.WebClientBeansInitializer,
+             com.acimacredit.customers.BeansInitializer,
+             com.acimacredit.funding.BeansInitializer,
+             com.acimacredit.aperture.gateway.BeansInitializer,
+             com.acimacredit.merchants.BeansInitializer,
+             com.acimacredit.operations.BeansInitializer,
+             com.acimacredit.users.BeansInitializer,
+             com.acimacredit.servicing.BeansInitializer
+
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        wiretap: ${aperture.debug:false}
+  security:
+    user:
+      name: acima
+      password: 10acima10
+      roles: ADMIN, ACTUATOR
+  # have to set this to false in JRE environments, as it requires JDK to work
+  reactor:
+    debug-agent:
+      enabled: false
+
+management:
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health,gateway,prometheus,info
+      path-mapping:
+        health: status
+        gateway: private/instance
+        prometheus: private/metrics
+        info: private/info
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      slo:
+        http.server.requests: 17s
+
+rollbar:
+  enabled: true
+  environment: development
+  accessToken: 3dc71e38cd74413db59c9c2a42cacdea
+  filterClassNames:
+    - com.acimacredit.common.clients.mp.MPError.NotFound
+
+aperture:
+  debug: false

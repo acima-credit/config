@@ -1,0 +1,6 @@
+adjustments:
+  mailer:
+    fakeSends: true
+  emails:
+    to: Acima Resolutions <${ADJUSTMENTS_EMAILS_RECIPIENT:resolutions+wayfair@acimacredit.com}>
+    from: Acima Credit API <${ADJUSTMENTS_EMAILS_SENDER:aperture@acimacredit.com}>
